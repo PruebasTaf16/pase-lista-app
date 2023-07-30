@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
         .then((value) => {NotificationService().solicitarPermisos(context)});
 
     fetchDataHoy();
-    // fetchUsuarioData();
+    fetchUsuarioData();
   }
 
   /**Calcular el horario para ver si se puede registrar */
