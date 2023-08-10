@@ -1,18 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pase_lista_app/helpers/alerta.dart';
+import 'package:pase_lista_app/variables/api.dart';
 
 class UbicacionService {
   /**
    * AQUÍ ES DONDE DEBERÁS CONFIGURAR LAS COORDENADAS DE ACUERDO A DONDE TE UBIQUES
    */
   Position? _currentPosition;
-  /**Latitud de la ubicación */
-  final double _targetLatitude = 17.819565;
-  /**Longitud de la ubicación */
-  final double _targetLongitude = -92.926933;
-  /**Rango máximo de permanencia */
-  final double _maxLimitInMeters = 50;
 
   /** Aquí se le pregunta al usuario si desea habilitar los permisos de ubicación */
   Future<bool> _verPermisosUbicacion(BuildContext context) async {
@@ -29,11 +25,23 @@ class UbicacionService {
   }
 
   Future<bool> validarUbicacion(BuildContext context) async {
+    print("Validando ubicación");
     if (!await _verPermisosUbicacion(context)) return false;
 
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.bestForNavigation);
     _currentPosition = position;
+
+    Response respuesta = await Dio().get(API_URL + "/ubicaciones/actual");
+
+    var ubicacionAPI = respuesta.data["data"];
+    print(ubicacionAPI);
+    /**Latitud de la ubicación */
+    var _targetLatitude = double.parse(ubicacionAPI["latitud"]);
+    /**Longitud de la ubicación */
+    var _targetLongitude = double.parse(ubicacionAPI["longitud"]);
+    /**Rango máximo de permanencia */
+    var _maxLimitInMeters = (ubicacionAPI["rango"]);
 
     print(_currentPosition);
     print(_targetLatitude);
