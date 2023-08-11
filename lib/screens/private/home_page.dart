@@ -182,6 +182,12 @@ class _HomePageState extends State<HomePage> {
 
     DateTime horaFechaActual = DateTime.now();
 
+    if (horarioSalida.isBefore(horarioEntrada)) {
+      horarioSalida = horarioSalida.add(Duration(days: 1));
+    }
+
+    print(horarioSalida);
+
     if (asistenciaData['_id'] != null) {
       setState(() {
         _puedeMandarJustificante = false;
